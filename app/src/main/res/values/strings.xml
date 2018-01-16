@@ -4,4 +4,6 @@
 
     <string name="create_account_btn_txt_ENG">Create Account</string>
 
+    <string name="btn_forgot_password">Forgot Your Password?</string>
+
 </resources>

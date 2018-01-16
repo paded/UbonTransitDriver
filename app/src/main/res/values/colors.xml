@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blue">#007aff</color>
-    <color name="off_blue">#0075f5</color>
+
     <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <!--<color name="colorAccent">#FF4081</color>-->
 
     <color name="white">#ffffff</color>
     <color name="off_white">#fafAFA</color>
+
+    <color name="blue">#007aff</color>
+    <color name="off_blue">#0075f5</color>
+    <color name="green">#4cd964</color>
+    <color name="red">#ff2d55</color>
+    <color name="black">#000000</color>
+    <color name="gray">#ceced2</color>
+
 
 
 </resources>
