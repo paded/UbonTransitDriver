@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "824971189623",
+    "firebase_url": "https://ubontransitdriver.firebaseio.com",
+    "project_id": "ubontransitdriver",
+    "storage_bucket": "ubontransitdriver.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824971189623:android:b98976bae9040202",
+        "android_client_info": {
+          "package_name": "ubontransitdriver.paded.com.ubontransitdriver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824971189623-1fruuuugnbhg8vu9cd06kii2rj5m92ef.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ubontransitdriver.paded.com.ubontransitdriver",
+            "certificate_hash": "45d9f2158616563bc2732fd5dedb4b6ea7ef8347"
+          }
+        },
+        {
+          "client_id": "824971189623-r4am8h5rg6anl1bjqj9dlnj5jdrcj19o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8RYJbQx-Zy6EsLnc78bKE8Bxg0NkisA0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824971189623-r4am8h5rg6anl1bjqj9dlnj5jdrcj19o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
