@@ -1,5 +1,6 @@
 package ubontransitdriver.paded.com.ubontransitdriver;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -7,9 +8,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +29,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     private Button btnCreateAccount, btnLogin, btnResetPassword;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    ScrollView mainLayout;
     private String TAG = "TEST22";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,8 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
+
+        mainLayout = (ScrollView) findViewById(R.id.mainlayout);
 
         inputEmail = (EditText)findViewById(R.id.input_email);
         inputPassword = (EditText)findViewById(R.id.input_password);
@@ -48,6 +54,10 @@ public class CreateAccountActivity extends AppCompatActivity {
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
                 final String userName = inputName.getText().toString().trim();
@@ -102,6 +112,15 @@ public class CreateAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        btnResetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CreateAccountActivity.this, ResetPasswordActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -13,8 +13,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity android:name=".CreateAccountActivity"></activity>
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".CreateAccountActivity" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
@@ -24,7 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ResetPasswordActivity"></activity>
     </application>
 
 </manifest>

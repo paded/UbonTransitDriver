@@ -2,10 +2,27 @@
     <string name="app_name">Ubon Transit Driver</string>
 
 
-    <string name="create_account_btn_txt_ENG">Create Account</string>
-
+    <!--Button-->
+    <string name="create_account_btn_txt_ENG">CREATE ACCOUNT</string>
     <string name="btn_forgot_password">Forgot Your Password?</string>
+    <string name="btn_joinus">Not a member? Join us now!</string>
     <string name="btn_login">Already registered. Login Me!</string>
+    <string name="btn_login_main">LOGIN</string>
+    <string name="btn_resetPassword">RESET PASSWORD</string>
+
+    <!--Label-->
     <string name="create_account_label">Create your account</string>
+    <string name="add_bus_label">Pick your bus</string>
+    <string name="login_label">Login</string>
+    <string name="forgot_password_label">Forgot password?</string>
+    <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
+
+
+
+
+    <!--Toast-->
+    <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
+    <string name="auth_failed">Authentication failed, check your email and password or sign up</string>
+    <string name="send_password_reset_email">Send Password reset email</string>
 
 </resources>

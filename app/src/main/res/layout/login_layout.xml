@@ -1,20 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/mainlayout"
     tools:context=".LoginActivity">
 
-    <Button
-        android:id="@+id/create_button"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:text="@string/btn_login"
-        android:textAllCaps="false"
-        android:textColor="@color/green"
-        android:textSize="15dp" />
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:padding="25dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/login_label"
+            android:layout_above="@+id/input_name"
+            android:textSize="40dp"
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:layout_marginBottom="15dp"
+            />
+
+                <EditText
+                    android:id="@+id/input_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/input_name"
+                    android:drawableLeft="@drawable/ic_email"
+                    android:drawablePadding="10dp"
+                    android:padding="15dp"
+                    android:layout_marginTop="10dp"
+                    android:hint="Your Email"
+                    android:background="@drawable/bg_edittext"
+                    android:ems="10"
+                    android:inputType="textEmailAddress" />
+                <EditText
+                    android:id="@+id/input_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/input_email"
+                    android:drawableLeft="@drawable/ic_pass_key"
+                    android:drawablePadding="10dp"
+                    android:padding="15dp"
+                    android:layout_marginTop="10dp"
+                    android:hint="Your Password"
+                    android:background="@drawable/bg_edittext"
+                    android:ems="10"
+                    android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/shadow_item_container"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/create_account_btn_color"
+            android:padding="10dp"
+            android:text="@string/btn_login_main"
+            android:textColor="#ffffffff" />
+
+        <Button
+            android:id="@+id/btn_reset_password"
+            android:layout_width="fill_parent"
+            android:layout_below="@+id/btn_create_account"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="@null"
+            android:text="@string/btn_forgot_password"
+            android:textAllCaps="false"
+            android:textColor="@drawable/button_text_color_blue" />
+
+        <!-- Link to Login Screen -->
+
+        <Button
+            android:id="@+id/btn_joinus"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@null"
+            android:text="@string/btn_joinus"
+            android:textAllCaps="false"
+            android:textColor="@drawable/button_text_color_green"
+            android:textSize="15dp" />
 
 
-</android.support.constraint.ConstraintLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="158dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+
+
+
+
+</ScrollView>

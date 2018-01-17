@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/mainlayout"
     tools:context=".CreateAccountActivity">
 
 
@@ -24,20 +25,6 @@
             android:textColor="@color/blue"
             android:layout_marginBottom="15dp"
             />
-        <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
-            android:id="@+id/shadow_item_container"
-            style="@style/ms9_DefaultShadowStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:ms9_shadowElevation="4dp"
-            app:ms9_shadowTranslationZ="2dp">
-
-
-
-            <RelativeLayout
-                android:id="@+id/input_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/input_name"
@@ -89,13 +76,10 @@
                     android:padding="15dp"
                     android:gravity="left|center_vertical"
                     style="?android:attr/borderlessButtonStyle"
-                    android:text="@string/create_account_btn_txt_ENG"
+                    android:text="@string/add_bus_label"
                     android:textColor="@color/blue" />
 
 
-
-            </RelativeLayout>
-        </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
 
         <Button
             android:id="@+id/btn_create_account"
@@ -117,7 +101,7 @@
             android:background="@null"
             android:text="@string/btn_forgot_password"
             android:textAllCaps="false"
-            android:textColor="@color/blue" />
+            android:textColor="@drawable/button_text_color_blue" />
 
         <!-- Link to Login Screen -->
 
@@ -125,11 +109,10 @@
             android:id="@+id/btnLogin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btn_reset_password"
             android:background="@null"
             android:text="@string/btn_login"
             android:textAllCaps="false"
-            android:textColor="@color/green"
+            android:textColor="@drawable/button_text_color_green"
             android:textSize="15dp" />
 
 
