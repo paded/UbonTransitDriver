@@ -43,6 +43,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         btnCreateAccount = (Button)findViewById(R.id.btn_create_account);
         btnResetPassword = (Button)findViewById(R.id.btn_reset_password);
+        btnLogin = (Button)findViewById(R.id.btnLogin);
 
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +95,15 @@ public class CreateAccountActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+        });
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

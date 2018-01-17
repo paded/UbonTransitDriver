@@ -8,11 +8,12 @@
     <color name="off_white">#fafAFA</color>
 
     <color name="blue">#007aff</color>
-    <color name="off_blue">#0075f5</color>
+    <color name="off_blue">#006ee7</color>
     <color name="green">#4cd964</color>
     <color name="red">#ff2d55</color>
     <color name="black">#000000</color>
-    <color name="gray">#ceced2</color>
+    <color name="gray">#ececec</color>
+    <color name="off_gray">#e1e1e1</color>
 
 
 

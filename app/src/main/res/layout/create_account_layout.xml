@@ -7,15 +7,23 @@
     tools:context=".CreateAccountActivity">
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:orientation="vertical"
         android:padding="25dp">
 
-
-
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/create_account_label"
+            android:layout_above="@+id/input_name"
+            android:textSize="40dp"
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:layout_marginBottom="15dp"
+            />
         <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
             android:id="@+id/shadow_item_container"
             style="@style/ms9_DefaultShadowStyle"
@@ -24,13 +32,12 @@
             app:ms9_shadowElevation="4dp"
             app:ms9_shadowTranslationZ="2dp">
 
+
+
             <RelativeLayout
                 android:id="@+id/input_layout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-
-                >
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/input_name"
@@ -70,6 +77,22 @@
                     android:ems="10"
                     android:inputType="textPassword" />
 
+                <Button
+                    android:id="@+id/input_busline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/input_password"
+                    android:layout_marginTop="20dp"
+                    android:drawableLeft="@drawable/ic_plus"
+                    android:drawablePadding="10dp"
+                    android:background="@drawable/bg_add_bus"
+                    android:padding="15dp"
+                    android:gravity="left|center_vertical"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:text="@string/create_account_btn_txt_ENG"
+                    android:textColor="@color/blue" />
+
+
 
             </RelativeLayout>
         </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
@@ -96,6 +119,19 @@
             android:textAllCaps="false"
             android:textColor="@color/blue" />
 
+        <!-- Link to Login Screen -->
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_reset_password"
+            android:background="@null"
+            android:text="@string/btn_login"
+            android:textAllCaps="false"
+            android:textColor="@color/green"
+            android:textSize="15dp" />
+
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -106,7 +142,7 @@
             android:layout_marginBottom="20dp"
             android:visibility="gone" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 
