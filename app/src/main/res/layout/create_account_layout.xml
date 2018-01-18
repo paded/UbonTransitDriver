@@ -63,21 +63,24 @@
                     android:background="@drawable/bg_edittext"
                     android:ems="10"
                     android:inputType="textPassword" />
+        <Button
+            android:id="@+id/btn_addBus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_password"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/ic_plus"
+            android:drawablePadding="10dp"
+            android:background="@drawable/bg_add_bus"
+            android:padding="15dp"
+            android:gravity="left|center_vertical"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/add_bus_label"
+            android:textColor="@color/blue" />
 
-                <Button
-                    android:id="@+id/input_busline"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/input_password"
-                    android:layout_marginTop="20dp"
-                    android:drawableLeft="@drawable/ic_plus"
-                    android:drawablePadding="10dp"
-                    android:background="@drawable/bg_add_bus"
-                    android:padding="15dp"
-                    android:gravity="left|center_vertical"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:text="@string/add_bus_label"
-                    android:textColor="@color/blue" />
+
+
+
 
 
 

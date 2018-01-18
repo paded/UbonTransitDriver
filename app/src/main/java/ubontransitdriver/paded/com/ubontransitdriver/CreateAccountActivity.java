@@ -3,6 +3,8 @@ package ubontransitdriver.paded.com.ubontransitdriver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,11 +29,15 @@ import com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView;
 
 public class CreateAccountActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword, inputName;
-    private Button btnCreateAccount, btnLogin, btnResetPassword;
+    private Button btnCreateAccount, btnLogin, btnResetPassword, btnAddBus;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-    ScrollView mainLayout;
+    private ScrollView mainLayout;
     private String TAG = "TEST22";
+
+    BottomSheetDialog bottomSheetDialog;
+    BottomSheetBehavior bottomSheetBehavior;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +57,26 @@ public class CreateAccountActivity extends AppCompatActivity {
         btnCreateAccount = (Button)findViewById(R.id.btn_create_account);
         btnResetPassword = (Button)findViewById(R.id.btn_reset_password);
         btnLogin = (Button)findViewById(R.id.btnLogin);
+        btnAddBus = (Button)findViewById(R.id.btn_addBus);
+
+        View bottomSheetView = getLayoutInflater().inflate(R.layout.bottom_sheet_layout, null);
+        bottomSheetDialog = new BottomSheetDialog(CreateAccountActivity.this);
+        bottomSheetDialog.setContentView(bottomSheetView);
+
+        bottomSheetBehavior = BottomSheetBehavior.from((View) bottomSheetView.getParent());
+
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+        TextView addMenu = (TextView) bottomSheetView.findViewById(R.id.menu_add_bus0);
+        TextView editMenu = (TextView) bottomSheetView.findViewById(R.id.menu_add_bus1);
+        TextView deleteMenu = (TextView) bottomSheetView.findViewById(R.id.menu_add_bus2);
+
+        addMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.hide();
+            }
+        });
 
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +149,13 @@ public class CreateAccountActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(CreateAccountActivity.this, ResetPasswordActivity.class);
                 startActivity(intent);
-                finish();
+            }
+        });
+
+        btnAddBus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.show();
             }
         });
 
