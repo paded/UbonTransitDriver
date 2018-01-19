@@ -14,7 +14,9 @@
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".CreateAccountActivity" />
+        <activity android:name=".CreateAccountActivity"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">

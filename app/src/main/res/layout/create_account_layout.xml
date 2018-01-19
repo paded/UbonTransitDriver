@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/mainlayout"
+    android:fitsSystemWindows="true"
     tools:context=".CreateAccountActivity">
-
-
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/framelayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:foreground="@drawable/shape_window_dim" >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -18,70 +30,66 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/create_account_label"
             android:layout_above="@+id/input_name"
-            android:textSize="40dp"
-            android:textStyle="bold"
-            android:textColor="@color/blue"
             android:layout_marginBottom="15dp"
-            />
+            android:text="@string/create_account_label"
+            android:textColor="@color/blue"
+            android:textSize="40dp"
+            android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/input_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edittext"
-                    android:drawableLeft="@drawable/ic_man_user"
-                    android:drawablePadding="10dp"
-                    android:ems="10"
-                    android:hint="Your Name"
-                    android:padding="15dp" />
+        <EditText
+            android:id="@+id/input_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_edittext"
+            android:drawableLeft="@drawable/ic_man_user"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Your Name"
+            android:padding="15dp" />
 
-                <EditText
-                    android:id="@+id/input_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/input_name"
-                    android:drawableLeft="@drawable/ic_email"
-                    android:drawablePadding="10dp"
-                    android:padding="15dp"
-                    android:layout_marginTop="10dp"
-                    android:hint="Your Email"
-                    android:background="@drawable/bg_edittext"
-                    android:ems="10"
-                    android:inputType="textEmailAddress" />
-                <EditText
-                    android:id="@+id/input_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/input_email"
-                    android:drawableLeft="@drawable/ic_pass_key"
-                    android:drawablePadding="10dp"
-                    android:padding="15dp"
-                    android:layout_marginTop="10dp"
-                    android:hint="Your Password"
-                    android:background="@drawable/bg_edittext"
-                    android:ems="10"
-                    android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/input_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_name"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_edittext"
+            android:drawableLeft="@drawable/ic_email"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Your Email"
+            android:inputType="textEmailAddress"
+            android:padding="15dp" />
+
+        <EditText
+            android:id="@+id/input_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_email"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_edittext"
+            android:drawableLeft="@drawable/ic_pass_key"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Your Password"
+            android:inputType="textPassword"
+            android:padding="15dp" />
+
         <Button
             android:id="@+id/btn_addBus"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/input_password"
             android:layout_marginTop="10dp"
+            android:background="@drawable/bg_add_bus"
             android:drawableLeft="@drawable/ic_plus"
             android:drawablePadding="10dp"
-            android:background="@drawable/bg_add_bus"
-            android:padding="15dp"
             android:gravity="left|center_vertical"
-            style="?android:attr/borderlessButtonStyle"
+            android:padding="15dp"
             android:text="@string/add_bus_label"
             android:textColor="@color/blue" />
-
-
-
-
-
 
 
         <Button
@@ -98,8 +106,8 @@
         <Button
             android:id="@+id/btn_reset_password"
             android:layout_width="fill_parent"
-            android:layout_below="@+id/btn_create_account"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_create_account"
             android:layout_marginTop="20dip"
             android:background="@null"
             android:text="@string/btn_forgot_password"
@@ -130,6 +138,67 @@
 
     </LinearLayout>
 
+    </ScrollView>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:fitsSystemWindows="true"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="0dp"
+        android:orientation="vertical"
+        app:layout_behavior="@string/bottom_sheet_behavior">
 
 
-</ScrollView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose your bus"
+            android:paddingLeft="16dp"
+            android:textSize="16dp"
+            android:textColor="@color/gray_500"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>--><!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:id="@+id/mainlayout"--><!--tools:context=".CreateAccountActivity">-->
+
+
+    <!--<LinearLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_gravity="center"--><!--android:orientation="vertical"--><!--android:padding="25dp">-->
+
+    <!--<TextView--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:text="@string/create_account_label"--><!--android:layout_above="@+id/input_name"--><!--android:textSize="40dp"--><!--android:textStyle="bold"--><!--android:textColor="@color/blue"--><!--android:layout_marginBottom="15dp"--><!--/>-->
+
+    <!--<EditText--><!--android:id="@+id/input_name"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:background="@drawable/bg_edittext"--><!--android:drawableLeft="@drawable/ic_man_user"--><!--android:drawablePadding="10dp"--><!--android:ems="10"--><!--android:hint="Your Name"--><!--android:padding="15dp" />-->
+
+    <!--<EditText--><!--android:id="@+id/input_email"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_below="@+id/input_name"--><!--android:drawableLeft="@drawable/ic_email"--><!--android:drawablePadding="10dp"--><!--android:padding="15dp"--><!--android:layout_marginTop="10dp"--><!--android:hint="Your Email"--><!--android:background="@drawable/bg_edittext"--><!--android:ems="10"--><!--android:inputType="textEmailAddress" />--><!--<EditText--><!--android:id="@+id/input_password"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_below="@+id/input_email"--><!--android:drawableLeft="@drawable/ic_pass_key"--><!--android:drawablePadding="10dp"--><!--android:padding="15dp"--><!--android:layout_marginTop="10dp"--><!--android:hint="Your Password"--><!--android:background="@drawable/bg_edittext"--><!--android:ems="10"--><!--android:inputType="textPassword" />--><!--<Button--><!--android:id="@+id/btn_addBus"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_below="@+id/input_password"--><!--android:layout_marginTop="10dp"--><!--android:drawableLeft="@drawable/ic_plus"--><!--android:drawablePadding="10dp"--><!--android:background="@drawable/bg_add_bus"--><!--android:padding="15dp"--><!--android:gravity="left|center_vertical"--><!--style="?android:attr/borderlessButtonStyle"--><!--android:text="@string/add_bus_label"--><!--android:textColor="@color/blue" />-->
+
+
+    <!--<Button--><!--android:id="@+id/btn_create_account"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_below="@+id/shadow_item_container"--><!--android:layout_marginTop="20dp"--><!--android:background="@drawable/create_account_btn_color"--><!--android:padding="10dp"--><!--android:text="@string/create_account_btn_txt_ENG"--><!--android:textColor="#ffffffff" />-->
+
+    <!--<Button--><!--android:id="@+id/btn_reset_password"--><!--android:layout_width="fill_parent"--><!--android:layout_below="@+id/btn_create_account"--><!--android:layout_height="wrap_content"--><!--android:layout_marginTop="20dip"--><!--android:background="@null"--><!--android:text="@string/btn_forgot_password"--><!--android:textAllCaps="false"--><!--android:textColor="@drawable/button_text_color_blue" />-->
+
+    <!--&lt;!&ndash; Link to Login Screen &ndash;&gt;-->
+
+    <!--<Button--><!--android:id="@+id/btnLogin"--><!--android:layout_width="fill_parent"--><!--android:layout_height="wrap_content"--><!--android:background="@null"--><!--android:text="@string/btn_login"--><!--android:textAllCaps="false"--><!--android:textColor="@drawable/button_text_color_green"--><!--android:textSize="15dp" />-->
+
+
+    <!--<ProgressBar--><!--android:id="@+id/progressBar"--><!--android:layout_width="158dp"--><!--android:layout_height="30dp"--><!--android:layout_below="@+id/btn_reset_password"--><!--android:layout_gravity="center|bottom"--><!--android:layout_marginBottom="20dp"--><!--android:visibility="gone" />-->
+
+    <!--</LinearLayout>-->
+
+
+    <!--</ScrollView>-->
