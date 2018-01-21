@@ -12,7 +12,7 @@
 
     <!--Label-->
     <string name="create_account_label">Create your account</string>
-    <string name="add_bus_label">Pick your bus</string>
+    <string name="add_bus_label">Add Your Bus</string>
     <string name="login_label">Login</string>
     <string name="forgot_password_label">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
@@ -24,19 +24,13 @@
     <string name="send_password_reset_email">Send Password reset email</string>
     <string name="send_password_reset_success_msg">We have sent you instructions to reset your password!</string>
     <string name="send_password_reset_failed_msg">Failed to send reset email!</string>
-
-
-    <!--Bus stop-->
-    <string name="Bus_no0">ม.</string>
-    <string name="Bus_no1">1</string>
-    <string name="Bus_no2">สาย 2</string>
-    <string name="Bus_no3">สาย 3</string>
-    <string name="Bus_no4">สาย 7</string>
-    <string name="Bus_no5">สาย 8</string>
-    <string name="Bus_no6">สาย 9</string>
-    <string name="Bus_no7">สาย 10</string>
-    <string name="Bus_no8">สาย 11</string>
-    <string name="Bus_no9">สาย 12</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 
 
 </resources>

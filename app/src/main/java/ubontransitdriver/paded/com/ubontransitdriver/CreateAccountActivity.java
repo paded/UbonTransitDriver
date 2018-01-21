@@ -36,9 +36,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateAccountActivity extends AppCompatActivity implements ItemAdapter.ItemListener{
-    private EditText inputEmail, inputPassword, inputName;
+    private EditText inputEmail, inputPassword, inputName, inputAddBus;
     private Button btnCreateAccount, btnLogin, btnResetPassword, btnAddBus;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
@@ -51,6 +53,8 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
     private ItemAdapter mAdapter;
     CoordinatorLayout coordinatorLayout;
     BottomSheetBehavior behavior;
+    ArrayList<String> items;
+    Map<String,String> myLine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,35 +69,52 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
         inputEmail = (EditText)findViewById(R.id.input_email);
         inputPassword = (EditText)findViewById(R.id.input_password);
         inputName = (EditText)findViewById(R.id.input_name);
+        inputAddBus = (EditText)findViewById(R.id.btn_addBus);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         btnCreateAccount = (Button)findViewById(R.id.btn_create_account);
         btnResetPassword = (Button)findViewById(R.id.btn_reset_password);
         btnLogin = (Button)findViewById(R.id.btnLogin);
-        btnAddBus = (Button)findViewById(R.id.btn_addBus);
+//        btnAddBus = (Button)findViewById(R.id.btn_addBus);
 
         layout_MainMenu = (FrameLayout) findViewById( R.id.framelayout);
         layout_MainMenu.getForeground().setAlpha( 0);
 
-//        View bottomSheetView = getLayoutInflater().inflate(R.layout.bottom_sheet_layout, null);
-//        bottomSheetDialog = new BottomSheetDialog(CreateAccountActivity.this);
-//        bottomSheetDialog.setContentView(bottomSheetView);
-//
-//        bottomSheetBehavior = BottomSheetBehavior.from((View) bottomSheetView.getParent());
-//
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        // Attach a listener to read the data at our posts reference
+        database.child("allbus").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String key = (String) ds.getKey();
+                    DatabaseReference keyReference = FirebaseDatabase.getInstance().getReference().child("allbus").child(key);
+                    keyReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Log.d(TAG, "onDataChange: "+dataSnapshot.child("name").getValue(String.class));
+                            AllBus post = new AllBus(dataSnapshot.child("name").getValue(String.class));
+//                            items.add(dataSnapshot.child("name").getValue(String.class));
+//                            AllBus post = dataSnapshot.child("name").getValue(AllBus.class);
+//                            Log.d(TAG, "onDataChange: "+post.getName());
+                        }
 
-//        TextView addMenu = (TextView) bottomSheetView.findViewById(R.id.menu_add_bus0);
-//        TextView editMenu = (TextView) bottomSheetView.findViewById(R.id.menu_add_bus1);
-//        TextView deleteMenu = (TextView) bottomSheetView.findViewById(R.id.menu_add_bus2);
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d(TAG, "Read failed");
+                        }
+                    });
 
-//        addMenu.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                bottomSheetDialog.hide();
-//            }
-//        });
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
 
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,12 +125,18 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
 
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
+                final String selected_bus = inputAddBus.getText().toString().trim();
                 final String userName = inputName.getText().toString().trim();
 
+                if (selected_bus.equalsIgnoreCase("Add Your Bus")) {
+                    Toast.makeText(getApplicationContext(), "Please select your bus!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
 
                 if (TextUtils.isEmpty(password)) {
                     Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
@@ -133,7 +160,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
                 auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(CreateAccountActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Toast.makeText(CreateAccountActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateAccountActivity.this, "Create User Complete" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
 
                         if (!task.isSuccessful()) {
@@ -142,7 +169,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
                         } else {
                             FirebaseUser user = auth.getCurrentUser();
                             Log.d(TAG, "onComplete: "+user.getUid());
-                            insertData(user.getUid(),userName);
+                            insertData(user.getUid(),userName,selected_bus);
                             startActivity(new Intent(CreateAccountActivity.this, MainActivity.class));
                             finish();
                         }
@@ -178,7 +205,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
-                Log.d(TAG, "onStateChanged: "+newState);
+//                Log.d(TAG, "onStateChanged: "+newState);
 
             }
 
@@ -187,7 +214,7 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
                 if(slideOffset == 0.0){
                     layout_MainMenu.getForeground().setAlpha(0);
                 }
-                Log.d(TAG, "slideOffset: "+slideOffset);
+//                Log.d(TAG, "slideOffset: "+slideOffset);
                 // React to dragging events
             }
         });
@@ -201,38 +228,36 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Get a reference to our posts
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("server/saving-data/fireblog/posts");
+//        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference ref = database.getReference("allbus");
+//        var adaRef = usersRef.child('ada');
+//        Log.d(TAG,"I am here"+ref);
 
-        // Attach a listener to read the data at our posts reference
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Post post = dataSnapshot.getValue(Post.class);
-                System.out.println(post);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });
-
-
+        items = new ArrayList<>();
+        items.add("สาย ม.");
+        items.add("สาย 1");
+        items.add("สาย 2");
+        items.add("สาย 3");
+        items.add("สาย 7");
+        items.add("สาย 8");
+        items.add("สาย 9");
+        items.add("สาย 10");
+        items.add("สาย 11");
+        items.add("สาย 12");
 
 
-        ArrayList<String> items = new ArrayList<>();
-        items.add("Item 16");
-        items.add("Item 2");
-        items.add("Item 3");
-        items.add("Item 4");
-        items.add("Item 5");
-        items.add("Item 6");
+
+
+
+
+
+
+
 
         mAdapter = new ItemAdapter(items, this);
         recyclerView.setAdapter(mAdapter);
 
-        btnAddBus.setOnClickListener(new View.OnClickListener() {
+        inputAddBus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -244,12 +269,35 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
 
     }
 
-    public void insertData(String uid, String name){
+    public void insertData(String uid, String name, String select_bus){
+        String busid = "";
+        if(select_bus.equalsIgnoreCase("สาย ม.")){
+            busid = "B00";
+        }else if(select_bus.equalsIgnoreCase("สาย 1")){
+            busid = "B01";
+        }else if(select_bus.equalsIgnoreCase("สาย 2")){
+            busid = "B02";
+        }else if(select_bus.equalsIgnoreCase("สาย 3")){
+            busid = "B03";
+        }else if(select_bus.equalsIgnoreCase("สาย 7")){
+            busid = "B07";
+        }else if(select_bus.equalsIgnoreCase("สาย 8")){
+            busid = "B08";
+        }else if(select_bus.equalsIgnoreCase("สาย 9")){
+            busid = "B09";
+        }else if(select_bus.equalsIgnoreCase("สาย 10")){
+            busid = "B010";
+        }else if(select_bus.equalsIgnoreCase("สาย 11")){
+            busid = "B011";
+        }else if(select_bus.equalsIgnoreCase("สาย 12")){
+            busid = "B012";
+        }
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users/"+uid);
 
         myRef.child("name").setValue(name);
-        myRef.child("bus_line").setValue(name);
+        myRef.child("bus_id").setValue(busid);
     }
 
     @Override
@@ -273,11 +321,15 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
 //    for button sheet click
     @Override
     public void onItemClick(String item) {
-
+        layout_MainMenu.getForeground().setAlpha(0);
         Snackbar.make(coordinatorLayout,item + " is selected", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+       inputAddBus.setText(item);
+        Log.d(TAG, "onItemClick: ");
+
+
 
     }
 }

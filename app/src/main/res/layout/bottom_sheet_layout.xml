@@ -14,12 +14,13 @@
         android:layout_height="60dp"
         android:layout_gravity="center"
         android:drawablePadding="@dimen/activity_horizontal_margin"
-        android:textColor="@color/half_black"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:textColor="@color/gray_900"
         android:background="@drawable/bg_add_bus_menu"
         android:drawableStart="@drawable/ic_frontal_bus_silhouette"
         android:gravity="center_vertical"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:text="@string/Bus_no0" />
+        android:padding="@dimen/activity_horizontal_margin" />
 
 
 

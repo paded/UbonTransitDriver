@@ -14,9 +14,9 @@
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".CreateAccountActivity"
-            android:windowSoftInputMode="adjustResize"
-            />
+        <activity
+            android:name=".CreateAccountActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
@@ -30,7 +30,8 @@
             android:name=".LoginActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ResetPasswordActivity" />
-        <activity android:name=".AddBusActivity"></activity>
+        <activity android:name=".AddBusActivity" />
+        <activity android:name=".ProfileSettingActivity"></activity>
     </application>
 
 </manifest>

@@ -30,6 +30,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'com.h6ah4i.android.materialshadowninepatch:materialshadowninepatch:0.6.5'
+    compile 'com.loopeer.lib:shadow:0.0.4-beta1'
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
 }
 
 apply plugin: 'com.google.gms.google-services'
