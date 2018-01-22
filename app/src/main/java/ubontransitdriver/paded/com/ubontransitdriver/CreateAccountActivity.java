@@ -295,9 +295,9 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users/"+uid);
-
         myRef.child("name").setValue(name);
         myRef.child("bus_id").setValue(busid);
+        myRef.child("status").setValue("on");
     }
 
     @Override
@@ -325,7 +325,6 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
         Snackbar.make(coordinatorLayout,item + " is selected", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
        inputAddBus.setText(item);
         Log.d(TAG, "onItemClick: ");
 

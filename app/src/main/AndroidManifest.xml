@@ -3,6 +3,7 @@
     package="ubontransitdriver.paded.com.ubontransitdriver">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -32,6 +33,10 @@
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".AddBusActivity" />
         <activity android:name=".ProfileSettingActivity"></activity>
+        <service
+            android:name=".TrackerService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

@@ -74,7 +74,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(ResetPasswordActivity.this, R.string.send_password_reset_failed_msg, Toast.LENGTH_SHORT).show();
                                 }
-
                                 progressBar.setVisibility(View.GONE);
                             }
                         });

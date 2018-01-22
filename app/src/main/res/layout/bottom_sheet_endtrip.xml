@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_history_menu_bottom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+
+
+    <TextView
+        android:textStyle="bold"
+        android:textSize="32dp"
+        android:textColor="@color/gray_900"
+        android:text="Do you want to End Trip?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:textSize="18dp"
+        android:textColor="@color/gray_900"
+        android:text="Make your bus invisible to everyone?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_endtrip_yes"
+        android:layout_marginTop="18dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/bg_return_bus"
+        android:textStyle="bold"
+        android:text="End Trip"
+        android:textSize="18dp"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_endtrip_cancel"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"
+        android:text="Cancel"
+        android:textSize="18dp"
+        android:textColor="@color/gray_500"
+        android:background="@drawable/bg_endtrip_bus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+
+</LinearLayout>
