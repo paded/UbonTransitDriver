@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:launchMode="singleTop"
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -34,7 +35,7 @@
         <activity android:name=".AddBusActivity" />
         <activity android:name=".ProfileSettingActivity"></activity>
         <service
-            android:name=".TrackerService"
+            android:name=".TrackerService3"
             android:enabled="true"
             android:exported="true"></service>
     </application>

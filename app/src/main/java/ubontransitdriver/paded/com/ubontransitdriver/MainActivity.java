@@ -1,12 +1,18 @@
 package ubontransitdriver.paded.com.ubontransitdriver;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btn_profile;
     private String TAG = "mainAC";
     private ProgressBar progressBar;
-    private Button btn_endtrip, btn_endtrip_cancel, btn_active_bus, btn_return,btn_endtrip_yes;
-//    private Boolean user_status = true;
+    private Button btn_endtrip, btn_endtrip_cancel, btn_active_bus, btn_return, btn_endtrip_yes;
+    //    private Boolean user_status = true;
     private TextView txt_user_status_on, txt_user_status_off;
     BottomSheetDialog bottomSheetDialog;
     BottomSheetBehavior bottomSheetBehavior;
@@ -46,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     String user_status;
     String user_id;
 
+    NotificationManager mNotificationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,14 +64,13 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser user = auth.getCurrentUser();
 
 
-
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        btn_profile = (ImageButton)findViewById(R.id.btn_profile);
-        btn_endtrip = (Button)findViewById(R.id.btn_endtrip);
-        txt_user_status_on = (TextView)findViewById(R.id.txt_user_status_on);
-        txt_user_status_off = (TextView)findViewById(R.id.txt_user_status_off);
-        btn_active_bus = (Button)findViewById(R.id.btn_active_bus);
-        btn_return = (Button)findViewById(R.id.btn_return);
+        btn_profile = (ImageButton) findViewById(R.id.btn_profile);
+        btn_endtrip = (Button) findViewById(R.id.btn_endtrip);
+        txt_user_status_on = (TextView) findViewById(R.id.txt_user_status_on);
+        txt_user_status_off = (TextView) findViewById(R.id.txt_user_status_off);
+        btn_active_bus = (Button) findViewById(R.id.btn_active_bus);
+        btn_return = (Button) findViewById(R.id.btn_return);
 
 //        view_cover = (FrameLayout) findViewById(R.id.view_cover);
 
@@ -77,25 +84,26 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetDialog.setContentView(bottomSheetView);
 
         bottomSheetBehavior = BottomSheetBehavior.from((View) bottomSheetView.getParent());
-        btn_endtrip_cancel = (Button)bottomSheetView.findViewById(R.id.btn_endtrip_cancel);
-        btn_endtrip_yes = (Button)bottomSheetView.findViewById(R.id.btn_endtrip_yes);
+        btn_endtrip_cancel = (Button) bottomSheetView.findViewById(R.id.btn_endtrip_cancel);
+        btn_endtrip_yes = (Button) bottomSheetView.findViewById(R.id.btn_endtrip_yes);
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         // Attach a listener to read the data at our posts reference
-        database.child("users/"+user.getUid()).addValueEventListener(new ValueEventListener() {
+        database.child("users/" + user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 FirebaseUser user = auth.getCurrentUser();
-                Log.d(TAG, "onDataChange: "+dataSnapshot.child("name").getValue(String.class));
-                Log.d(TAG, "onDataChange: "+dataSnapshot.child("bus_id").getValue(String.class));
-                Log.d(TAG, "onDataChange: "+dataSnapshot.child("status").getValue(String.class));
+                Log.d(TAG, "onDataChange: " + dataSnapshot.child("name").getValue(String.class));
+                Log.d(TAG, "onDataChange: " + dataSnapshot.child("bus_id").getValue(String.class));
+                Log.d(TAG, "onDataChange: " + dataSnapshot.child("status").getValue(String.class));
                 user_status = dataSnapshot.child("status").getValue(String.class);
                 bus_id = dataSnapshot.child("bus_id").getValue(String.class);
                 user_id = user.getUid();
 
                 updateUI(user_status);
 
-                if(user_status.equalsIgnoreCase("on")){
-                    trackBus(user_id,bus_id);
+                if (user_status.equalsIgnoreCase("on")) {
+                    buildNotification();
+                    trackBus(user_id, bus_id);
                 }
 
 
@@ -135,18 +143,19 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = auth.getCurrentUser();
                 active_status = false;
 
-                if(bus_id!=null){
-                    Intent intent = new Intent(MainActivity.this, TrackerService.class);
+                if (bus_id != null) {
+                    Intent intent = new Intent(MainActivity.this, TrackerService3.class);
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("active_bus/"+bus_id);
+                    DatabaseReference myRef = database.getReference("active_bus/" + bus_id);
                     myRef.child(user.getUid()).removeValue();
                     stopService(intent);
+                    mNotificationManager.cancel(001);
                 }
 //                DatabaseReference myRef = database.getReference("active_bus/"+bus_id+"/"+user_id);
 //                myRef.child("lat").setValue(12);
 //                myRef.child("lng").setValue(12);
 
-                UpdateUserStatus(user.getUid(),active_status);
+                UpdateUserStatus(user.getUid(), active_status);
                 bottomSheetDialog.hide();
             }
         });
@@ -164,14 +173,9 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 FirebaseUser user = auth.getCurrentUser();
                 active_status = true;
-                UpdateUserStatus(user.getUid(),active_status);
+                UpdateUserStatus(user.getUid(), active_status);
             }
         });
-
-
-
-
-
 
 
 //
@@ -186,27 +190,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void UpdateUserStatus(String user_id, boolean active_status){
+    public void UpdateUserStatus(String user_id, boolean active_status) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users/"+user_id);
-        if(!active_status){
+        DatabaseReference myRef = database.getReference("users/" + user_id);
+        if (!active_status) {
             myRef.child("status").setValue("off");
-        }else{
+        } else {
             myRef.child("status").setValue("on");
         }
 
         progressBar.setVisibility(View.GONE);
     }
 
-    public void updateUI(String user_status){
-        if(user_status.equalsIgnoreCase("off")){
+    public void updateUI(String user_status) {
+        if (user_status.equalsIgnoreCase("off")) {
             btn_active_bus.setVisibility(View.VISIBLE);
             txt_user_status_off.setVisibility(View.VISIBLE);
 
             btn_endtrip.setVisibility(View.GONE);
             btn_return.setVisibility(View.GONE);
             txt_user_status_on.setVisibility(View.GONE);
-        }else{
+        } else {
             btn_active_bus.setVisibility(View.GONE);
             txt_user_status_off.setVisibility(View.GONE);
 
@@ -216,22 +220,22 @@ public class MainActivity extends AppCompatActivity {
         }
         progressBar.setVisibility(View.GONE);
 //        view_cover.getForeground().setAlpha(0);
-        Log.d(TAG, "updateUI: "+user_status);
+        Log.d(TAG, "updateUI: " + user_status);
     }
 
-    public void trackBus(String user_id,String bus_id){
+    public void trackBus(String user_id, String bus_id) {
         // Check GPS is enabled ****
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Toast.makeText(this, "Please enable location services", Toast.LENGTH_SHORT).show();
-            finish();
         }
         // Check location permission is granted - if it is, start
         // the service, otherwise request the permission
         int permission = ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PackageManager.PERMISSION_GRANTED) {
-            startTrackerService(user_id,bus_id);
+            startTrackerService(user_id, bus_id);
+            Log.d(TAG, "trackBus: ");
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -244,13 +248,12 @@ public class MainActivity extends AppCompatActivity {
 //        myRef.child("lng").setValue(12);
 
 
-
     }
 
-    private void startTrackerService(String user_id,String bus_id) {
-        Intent intent = new Intent(this,TrackerService.class);
-        intent.putExtra("user_id",user_id);
-        intent.putExtra("bus_id",bus_id);
+    private void startTrackerService(String user_id, String bus_id) {
+        Intent intent = new Intent(this, TrackerService3.class);
+        intent.putExtra("user_id", user_id);
+        intent.putExtra("bus_id", bus_id);
         startService(intent);
     }
 
@@ -260,10 +263,53 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PERMISSIONS_REQUEST && grantResults.length == 1
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // Start the service when the permission is granted
-            startTrackerService(user_id,bus_id);
+            startTrackerService(user_id, bus_id);
+            Log.d(TAG, "onRequestPermissionsResult: Start");
         } else {
             finish();
         }
     }
 
+    private void buildNotification() {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_wifi_bus)
+                .setContentTitle("On Going")
+                .setContentText("Tracking, tap to open")
+                .setOngoing(true);
+
+        //Create the intent that’ll fire when the user taps the notification//
+
+//        Intent intent = new Intent(this, MainActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+//
+//        mBuilder.setContentIntent(pendingIntent);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        mBuilder.setContentIntent(contentIntent);
+
+
+       mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(001, mBuilder.build());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        if(user_status.equalsIgnoreCase("on")){
+//            buildNotification();
+//        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+//        notificationManager.cancel(001);
+    }
 }
