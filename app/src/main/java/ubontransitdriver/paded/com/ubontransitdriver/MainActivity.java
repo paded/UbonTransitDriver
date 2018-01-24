@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button btn_endtrip, btn_endtrip_cancel, btn_active_bus, btn_return, btn_endtrip_yes;
     //    private Boolean user_status = true;
-    private TextView txt_user_status_on, txt_user_status_off;
+    private TextView txt_user_status_on, txt_user_status_off,txt_stop,txt_start;
     BottomSheetDialog bottomSheetDialog;
     BottomSheetBehavior bottomSheetBehavior;
     private FrameLayout view_cover;
@@ -51,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
     String bus_id;
     String user_status;
     String user_id;
+    String start_busstop;
+    String stop_busstop;
+    int k=0;
+
+
 
     NotificationManager mNotificationManager;
 
@@ -61,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
+        final FirebaseUser user = auth.getCurrentUser();
 
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -71,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
         txt_user_status_off = (TextView) findViewById(R.id.txt_user_status_off);
         btn_active_bus = (Button) findViewById(R.id.btn_active_bus);
         btn_return = (Button) findViewById(R.id.btn_return);
+
+        txt_start = (TextView)findViewById(R.id.txt_start);
+        txt_stop = (TextView)findViewById(R.id.txt_stop);
 
 //        view_cover = (FrameLayout) findViewById(R.id.view_cover);
 
@@ -99,14 +107,61 @@ public class MainActivity extends AppCompatActivity {
                 bus_id = dataSnapshot.child("bus_id").getValue(String.class);
                 user_id = user.getUid();
 
+                DatabaseReference keyReference = FirebaseDatabase.getInstance().getReference().child("allbus/" + bus_id + "/bus_stop");
+                keyReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String string = dataSnapshot.getValue(String.class);
+                        String[] bus_stop = string.split(",");
+                        int bus_stop_size = bus_stop.length;
+                        String start_stop_busstop[] = new String[2];
+                        start_stop_busstop[0] = bus_stop[0];
+                        start_stop_busstop[1] = bus_stop[bus_stop_size - 1];
+
+                        for(int i=0; i<start_stop_busstop.length; i++) {
+                            k=0;
+                            DatabaseReference keyReference = FirebaseDatabase.getInstance().getReference().child("all_busstop/" + start_stop_busstop[i]);
+                            keyReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Log.d(TAG, "onDataChange: "+dataSnapshot.child("nameEN").getValue(String.class));
+                                    if (k == 0) {
+                                        start_busstop = dataSnapshot.child("nameEN").getValue(String.class);
+                                        txt_start.setText(start_busstop);
+//                                        updateCARD(start_busstop);
+                                    }else{
+                                        stop_busstop = dataSnapshot.child("nameEN").getValue(String.class);
+                                        txt_stop.setText(stop_busstop);
+                                        progressBar.setVisibility(View.GONE);
+                                    }
+                                    k+=1;
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.d(TAG, "Read failed");
+                                }
+                            });
+                        }
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG, "Read failed");
+                    }
+                });
+
+
+
                 updateUI(user_status);
 
                 if (user_status.equalsIgnoreCase("on")) {
                     buildNotification();
                     trackBus(user_id, bus_id);
                 }
-
-
             }
 
             @Override
@@ -116,9 +171,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-//        if(!user_status){
-//            txt_user_status.setVisibility(View.GONE);
-//        }
 
 
         btn_profile.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +229,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btn_return.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(user_status.equalsIgnoreCase("on")){
+                    start_busstop = txt_start.getText()+"";
+                    stop_busstop = txt_stop.getText()+"";
+                    txt_start.setText(stop_busstop);
+                    txt_stop.setText(start_busstop);
+                }else{
+                    start_busstop = txt_start.getText()+"";
+                    stop_busstop = txt_stop.getText()+"";
+                    txt_start.setText(stop_busstop);
+                    txt_stop.setText(start_busstop);
+                }
+                Log.d(TAG, "onClick: RETURN"+user_status+" start"+start_busstop+ " stop:"+stop_busstop);
+            }
+        });
+
 
 //
 //        MaterialShadowContainerView shadowView =
@@ -202,13 +272,15 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
     }
 
+
     public void updateUI(String user_status) {
+//        txt_start.setText(start_busstop);
+//        txt_stop.setText(stop_busstop);
         if (user_status.equalsIgnoreCase("off")) {
             btn_active_bus.setVisibility(View.VISIBLE);
             txt_user_status_off.setVisibility(View.VISIBLE);
-
             btn_endtrip.setVisibility(View.GONE);
-            btn_return.setVisibility(View.GONE);
+            btn_return.setVisibility(View.VISIBLE);
             txt_user_status_on.setVisibility(View.GONE);
         } else {
             btn_active_bus.setVisibility(View.GONE);
@@ -218,7 +290,6 @@ public class MainActivity extends AppCompatActivity {
             btn_return.setVisibility(View.VISIBLE);
             txt_user_status_on.setVisibility(View.VISIBLE);
         }
-        progressBar.setVisibility(View.GONE);
 //        view_cover.getForeground().setAlpha(0);
         Log.d(TAG, "updateUI: " + user_status);
     }
@@ -251,9 +322,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startTrackerService(String user_id, String bus_id) {
+
+//        txt_start.setText(stop_busstop);
+//        txt_stop.setText(start_busstop);
+        String destination = txt_stop.getText()+"";
+        Log.d(TAG, "startTrackerService: "+start_busstop+" "+stop_busstop);
         Intent intent = new Intent(this, TrackerService3.class);
         intent.putExtra("user_id", user_id);
         intent.putExtra("bus_id", bus_id);
+        intent.putExtra("destination", destination);
         startService(intent);
     }
 
@@ -273,17 +350,10 @@ public class MainActivity extends AppCompatActivity {
     private void buildNotification() {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_wifi_bus)
-                .setContentTitle("On Going")
-                .setContentText("Tracking, tap to open")
-                .setOngoing(true);
-
-        //Create the intent that’ll fire when the user taps the notification//
-
-//        Intent intent = new Intent(this, MainActivity.class);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-//
-//        mBuilder.setContentIntent(pendingIntent);
+                        .setSmallIcon(R.drawable.ic_wifi_bus)
+                        .setContentTitle("On Going")
+                        .setContentText("Tracking, tap to open")
+                        .setOngoing(true);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
@@ -292,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
         mBuilder.setContentIntent(contentIntent);
 
 
-       mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         mNotificationManager.notify(001, mBuilder.build());
     }
@@ -300,16 +370,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-//        if(user_status.equalsIgnoreCase("on")){
-//            buildNotification();
-//        }
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-//        notificationManager.cancel(001);
+
     }
 }

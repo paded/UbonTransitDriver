@@ -151,9 +151,9 @@
                                     android:textStyle="bold" />
 
                                 <TextView
+                                    android:id="@+id/txt_stop"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Ubon Terminal"
                                     android:textColor="@color/gray_800"
                                     android:textSize="26dp"
                                     android:textStyle="bold" />
@@ -190,9 +190,9 @@
                                 android:textSize="17dp" />
 
                             <TextView
+                                android:id="@+id/txt_start"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Ubon Ratchathani"
                                 android:textColor="@color/blue"
                                 android:textSize="17dp" />
 
@@ -475,11 +475,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:background="@drawable/bg_return_bus"
-                        android:drawableRight="@drawable/ic_return"
+                        android:drawableRight="@drawable/ic_arrows"
                         android:gravity="left|center_vertical"
                         android:padding="15dp"
                         android:text="Return"
-                        android:textColor="@color/white"
+                        android:textColor="@color/gray_500"
                         android:textSize="20dp"
                         android:textStyle="bold"
                         android:visibility="gone" />
@@ -495,7 +495,7 @@
                         android:gravity="left|center_vertical"
                         android:padding="15dp"
                         android:text="End Trip"
-                        android:textColor="@color/gray_500"
+                        android:textColor="@color/white"
                         android:textSize="20dp"
                         android:textStyle="bold"
                         android:visibility="gone" />
@@ -507,11 +507,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_btn_activebus"
-                        android:drawableRight="@drawable/icon_active_clicked"
+                        android:drawableRight="@drawable/ic_track_changes_white_24dp"
                         android:gravity="left|center_vertical"
                         android:padding="15dp"
                         android:text="Active Bus"
-                        android:textColor="@drawable/text_active_color"
+                        android:textColor="@color/white"
                         android:textSize="20dp"
                         android:textStyle="bold"
                         android:visibility="gone" />

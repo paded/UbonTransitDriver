@@ -15,6 +15,7 @@
     <color name="green">#4cd964</color>
     <color name="off_green">#47c75d</color>
     <color name="red">#ff2d55</color>
+    <color name="off_red">#ea294d</color>
     <color name="black">#000000</color>
     <color name="half_black">#303030</color>
     <color name="gray">#ececec</color>

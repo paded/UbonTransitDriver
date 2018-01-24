@@ -35,6 +35,7 @@ public class TrackerService3 extends Service implements
     String TAG = "trackService";
     private String user_id;
     private String bus_id;
+    private String destination;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -45,6 +46,7 @@ public class TrackerService3 extends Service implements
     public int onStartCommand(Intent intent, int flags, int startId) {
        user_id = intent.getStringExtra("user_id");
        bus_id = intent.getStringExtra("bus_id");
+       destination = intent.getStringExtra("destination");
         Log.d(TAG, "onStartCommand: "+user_id+" "+bus_id);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (mGoogleApiClient != null && mFusedLocationClient != null) {
@@ -95,6 +97,7 @@ public class TrackerService3 extends Service implements
                 ref.child("latitude").setValue(location.getLatitude());
                 ref.child("longitude").setValue(location.getLongitude());
                 ref.child("time").setValue(location.getTime());
+                ref.child("destination").setValue(destination);
 //                Date currentTime = Calendar.getInstance().getTime();
 //                Log.d(TAG, "Location: " + location.getLatitude() + " " + location.getLongitude()+" "+location.getTime()+" "+currentTime);
 

@@ -33,7 +33,7 @@
         android:id="@+id/btn_endtrip_yes"
         android:layout_marginTop="18dp"
         style="?android:attr/borderlessButtonStyle"
-        android:background="@drawable/bg_return_bus"
+        android:background="@drawable/bg_endtrip_bus"
         android:textStyle="bold"
         android:text="End Trip"
         android:textSize="18dp"
@@ -49,7 +49,7 @@
         android:text="Cancel"
         android:textSize="18dp"
         android:textColor="@color/gray_500"
-        android:background="@drawable/bg_endtrip_bus"
+        android:background="@drawable/bg_return_bus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
