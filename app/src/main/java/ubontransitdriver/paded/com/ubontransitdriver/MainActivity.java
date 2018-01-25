@@ -1,6 +1,7 @@
 package ubontransitdriver.paded.com.ubontransitdriver;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button btn_endtrip, btn_endtrip_cancel, btn_active_bus, btn_return, btn_endtrip_yes;
     //    private Boolean user_status = true;
-    private TextView txt_user_status_on, txt_user_status_off,txt_stop,txt_start;
+    private TextView txt_user_status_on, txt_user_status_off, txt_stop, txt_start;
     BottomSheetDialog bottomSheetDialog;
     BottomSheetBehavior bottomSheetBehavior;
     private FrameLayout view_cover;
@@ -51,10 +52,12 @@ public class MainActivity extends AppCompatActivity {
     String bus_id;
     String user_status;
     String user_id;
-    String start_busstop;
-    String stop_busstop;
-    int k=0;
+    String start_busstop_name;
+    String stop_busstop_name;
 
+    String start_busstop_id;
+    String stop_busstop_id;
+    int k = 0;
 
 
     NotificationManager mNotificationManager;
@@ -77,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
         btn_active_bus = (Button) findViewById(R.id.btn_active_bus);
         btn_return = (Button) findViewById(R.id.btn_return);
 
-        txt_start = (TextView)findViewById(R.id.txt_start);
-        txt_stop = (TextView)findViewById(R.id.txt_stop);
+        txt_start = (TextView) findViewById(R.id.txt_start);
+        txt_stop = (TextView) findViewById(R.id.txt_stop);
 
 //        view_cover = (FrameLayout) findViewById(R.id.view_cover);
 
@@ -100,52 +103,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 FirebaseUser user = auth.getCurrentUser();
-                Log.d(TAG, "onDataChange: " + dataSnapshot.child("name").getValue(String.class));
-                Log.d(TAG, "onDataChange: " + dataSnapshot.child("bus_id").getValue(String.class));
-                Log.d(TAG, "onDataChange: " + dataSnapshot.child("status").getValue(String.class));
+//                Log.d(TAG, "onDataChange: " + dataSnapshot.child("name").getValue(String.class));
+//                Log.d(TAG, "onDataChange: " + dataSnapshot.child("bus_id").getValue(String.class));
+//                Log.d(TAG, "onDataChange: " + dataSnapshot.child("status").getValue(String.class));
                 user_status = dataSnapshot.child("status").getValue(String.class);
                 bus_id = dataSnapshot.child("bus_id").getValue(String.class);
                 user_id = user.getUid();
 
-                DatabaseReference keyReference = FirebaseDatabase.getInstance().getReference().child("allbus/" + bus_id + "/bus_stop");
-                keyReference.addValueEventListener(new ValueEventListener() {
+                start_busstop_id = dataSnapshot.child("start_busstop").getValue(String.class);
+                stop_busstop_id = dataSnapshot.child("stop_busstop").getValue(String.class);
+
+                DatabaseReference keyReference_start = FirebaseDatabase.getInstance().getReference().child("all_busstop/" + start_busstop_id);
+                keyReference_start.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String string = dataSnapshot.getValue(String.class);
-                        String[] bus_stop = string.split(",");
-                        int bus_stop_size = bus_stop.length;
-                        String start_stop_busstop[] = new String[2];
-                        start_stop_busstop[0] = bus_stop[0];
-                        start_stop_busstop[1] = bus_stop[bus_stop_size - 1];
 
-                        for(int i=0; i<start_stop_busstop.length; i++) {
-                            k=0;
-                            DatabaseReference keyReference = FirebaseDatabase.getInstance().getReference().child("all_busstop/" + start_stop_busstop[i]);
-                            keyReference.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Log.d(TAG, "onDataChange: "+dataSnapshot.child("nameEN").getValue(String.class));
-                                    if (k == 0) {
-                                        start_busstop = dataSnapshot.child("nameEN").getValue(String.class);
-                                        txt_start.setText(start_busstop);
-//                                        updateCARD(start_busstop);
-                                    }else{
-                                        stop_busstop = dataSnapshot.child("nameEN").getValue(String.class);
-                                        txt_stop.setText(stop_busstop);
-                                        progressBar.setVisibility(View.GONE);
-                                    }
-                                    k+=1;
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.d(TAG, "Read failed");
-                                }
-                            });
-                        }
-
-
-
+                            start_busstop_name = dataSnapshot.child("nameEN").getValue(String.class);
+                            txt_start.setText(start_busstop_name);
                     }
 
                     @Override
@@ -154,14 +128,102 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+                DatabaseReference keyReference_stop = FirebaseDatabase.getInstance().getReference().child("all_busstop/" + stop_busstop_id);
+                keyReference_stop.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        stop_busstop_name = dataSnapshot.child("nameEN").getValue(String.class);
+                        txt_stop.setText(stop_busstop_name);
+
+                        if (user_status.equalsIgnoreCase("on")) {
+                            buildNotification();
+                            trackBus(user_id, bus_id);
+                        }
+
+//                        if(user_status.equalsIgnoreCase("on")){
+//                            Log.d("dddd", "onDataChange: "+stop_busstop_id);
+//                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+//                            DatabaseReference myRef2 = database.getReference("active_bus/"+bus_id+"/"+user_id);
+//                            myRef2.child("s").setValue("s");
+//                            myRef2.child("destination").setValue(stop_busstop_id);
+//                        }
+
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG, "Read failed");
+                    }
+                });
+
+//                DatabaseReference keyReference = FirebaseDatabase.getInstance().getReference().child("allbus/" + bus_id + "/bus_stop");
+//                keyReference.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        String string = dataSnapshot.getValue(String.class);
+//                        String[] bus_stop = string.split(",");
+//                        int bus_stop_size = bus_stop.length;
+//                        String start_stop_busstop[] = new String[2];
+//                        start_stop_busstop[0] = bus_stop[0];
+//                        start_stop_busstop[1] = bus_stop[bus_stop_size - 1];
+//
+//                        for(int i=0; i<start_stop_busstop.length; i++) {
+//                            k=0;
+//                            DatabaseReference keyReference = FirebaseDatabase.getInstance().getReference().child("all_busstop/" + start_stop_busstop[i]);
+//                            keyReference.addValueEventListener(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                                    if((txt_stop.getText()+"").equalsIgnoreCase(dataSnapshot.child("nameEN").getValue(String.class))){
+//                                        if (k == 0) {
+//                                            stop_busstop = dataSnapshot.child("nameEN").getValue(String.class);
+//                                            txt_start.setText(stop_busstop);
+////                                        updateCARD(start_busstop);
+//                                        }else{
+//                                            start_busstop = dataSnapshot.child("nameEN").getValue(String.class);
+//                                            txt_stop.setText(start_busstop);
+//                                            progressBar.setVisibility(View.GONE);
+//                                        }
+//                                        k+=1;
+//                                        Log.d("equu", "onDataChange: INDIDE TEXT NOT SAME ");
+//                                    }else{
+//                                        if (k == 0) {
+//                                            start_busstop = dataSnapshot.child("nameEN").getValue(String.class);
+//                                            txt_start.setText(start_busstop);
+////                                        updateCARD(start_busstop);
+//                                        }else{
+//                                            stop_busstop = dataSnapshot.child("nameEN").getValue(String.class);
+//                                            txt_stop.setText(stop_busstop);
+//                                            progressBar.setVisibility(View.GONE);
+//                                        }
+//                                        k+=1;
+//                                    }
+////                                    Log.d(TAG, "onDataChange: INSIDE"+dataSnapshot.child("nameEN").getValue(String.class));
+//
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(DatabaseError databaseError) {
+//                                    Log.d(TAG, "Read failed");
+//                                }
+//                            });
+//                        }
+//
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//                        Log.d(TAG, "Read failed");
+//                    }
+//                });
 
 
                 updateUI(user_status);
 
-                if (user_status.equalsIgnoreCase("on")) {
-                    buildNotification();
-                    trackBus(user_id, bus_id);
-                }
+
             }
 
             @Override
@@ -171,13 +233,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
         btn_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ProfileSettingActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -232,18 +292,31 @@ public class MainActivity extends AppCompatActivity {
         btn_return.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(user_status.equalsIgnoreCase("on")){
-                    start_busstop = txt_start.getText()+"";
-                    stop_busstop = txt_stop.getText()+"";
-                    txt_start.setText(stop_busstop);
-                    txt_stop.setText(start_busstop);
-                }else{
-                    start_busstop = txt_start.getText()+"";
-                    stop_busstop = txt_stop.getText()+"";
-                    txt_start.setText(stop_busstop);
-                    txt_stop.setText(start_busstop);
-                }
-                Log.d(TAG, "onClick: RETURN"+user_status+" start"+start_busstop+ " stop:"+stop_busstop);
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("users/"+user_id);
+                myRef.child("start_busstop").setValue(stop_busstop_id);
+                myRef.child("stop_busstop").setValue(start_busstop_id);
+
+//                if(user_status.equalsIgnoreCase("on")){
+//                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+//                    DatabaseReference myRef = database.getReference("active_bus/"+bus_id+"/"+user_id);
+//                    myRef.child("destination").setValue(stop_busstop_name);
+//                }
+
+//                progressBar.setVisibility(View.GONE);
+
+//                if (user_status.equalsIgnoreCase("on")) {
+//                    start_busstop = txt_start.getText() + "";
+//                    stop_busstop = txt_stop.getText() + "";
+//                    txt_start.setText(stop_busstop);
+//                    txt_stop.setText(start_busstop);
+//                } else {
+//                    start_busstop = txt_start.getText() + "";
+//                    stop_busstop = txt_stop.getText() + "";
+//                    txt_start.setText(stop_busstop);
+//                    txt_stop.setText(start_busstop);
+//                }
+//                Log.d(TAG, "onClick: RETURN" + user_status + " start" + start_busstop + " stop:" + stop_busstop);
             }
         });
 
@@ -272,10 +345,23 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                boolean result = data.getBooleanExtra("logout",false);
+                if(result){
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }
 
     public void updateUI(String user_status) {
-//        txt_start.setText(start_busstop);
-//        txt_stop.setText(stop_busstop);
         if (user_status.equalsIgnoreCase("off")) {
             btn_active_bus.setVisibility(View.VISIBLE);
             txt_user_status_off.setVisibility(View.VISIBLE);
@@ -322,11 +408,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startTrackerService(String user_id, String bus_id) {
-
-//        txt_start.setText(stop_busstop);
-//        txt_stop.setText(start_busstop);
-        String destination = txt_stop.getText()+"";
-        Log.d(TAG, "startTrackerService: "+start_busstop+" "+stop_busstop);
+        Log.d("dddd", "startTrackerService: "+stop_busstop_name);
+        String destination = stop_busstop_name;
         Intent intent = new Intent(this, TrackerService3.class);
         intent.putExtra("user_id", user_id);
         intent.putExtra("bus_id", bus_id);

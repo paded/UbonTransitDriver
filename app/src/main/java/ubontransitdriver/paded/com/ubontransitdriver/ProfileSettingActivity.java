@@ -1,5 +1,6 @@
 package ubontransitdriver.paded.com.ubontransitdriver;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -44,8 +45,12 @@ public class ProfileSettingActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     // user auth state is changed - user is null
                     // launch login activity
-                    startActivity(new Intent(ProfileSettingActivity.this, LoginActivity.class));
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("logout",true);
+                    setResult(Activity.RESULT_OK,returnIntent);
                     finish();
+//                    startActivity(new Intent(ProfileSettingActivity.this, LoginActivity.class));
+//                    finish();
                 }
             }
         };

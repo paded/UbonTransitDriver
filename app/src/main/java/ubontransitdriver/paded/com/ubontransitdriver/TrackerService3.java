@@ -23,6 +23,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -44,6 +45,7 @@ public class TrackerService3 extends Service implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("dddd", "onStartCommand: ");
        user_id = intent.getStringExtra("user_id");
        bus_id = intent.getStringExtra("bus_id");
        destination = intent.getStringExtra("destination");
@@ -96,7 +98,14 @@ public class TrackerService3 extends Service implements
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
                 ref.child("latitude").setValue(location.getLatitude());
                 ref.child("longitude").setValue(location.getLongitude());
-                ref.child("time").setValue(location.getTime());
+
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String formattedDate = df.format(c.getTime());
+                Log.d("dddd", "onLocationResult: "+formattedDate);
+
+                ref.child("time").setValue(formattedDate);
+
                 ref.child("destination").setValue(destination);
 //                Date currentTime = Calendar.getInstance().getTime();
 //                Log.d(TAG, "Location: " + location.getLatitude() + " " + location.getLongitude()+" "+location.getTime()+" "+currentTime);

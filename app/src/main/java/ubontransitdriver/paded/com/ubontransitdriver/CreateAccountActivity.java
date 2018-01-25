@@ -55,6 +55,8 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
     BottomSheetBehavior behavior;
     ArrayList<String> items;
     Map<String,String> myLine;
+    String start_busstop_id;
+    String stop_busstop_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,8 +271,9 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
 
     }
 
-    public void insertData(String uid, String name, String select_bus){
+    public void insertData(final String uid, final String name, String select_bus){
         String busid = "";
+
         if(select_bus.equalsIgnoreCase("สาย ม.")){
             busid = "B00";
         }else if(select_bus.equalsIgnoreCase("สาย 1")){
@@ -293,11 +296,41 @@ public class CreateAccountActivity extends AppCompatActivity implements ItemAdap
             busid = "B012";
         }
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users/"+uid);
-        myRef.child("name").setValue(name);
-        myRef.child("bus_id").setValue(busid);
-        myRef.child("status").setValue("on");
+        DatabaseReference keyReference = FirebaseDatabase.getInstance().getReference().child("allbus/" + busid);
+        final String finalBusid = busid;
+        keyReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String x = dataSnapshot.child("bus_stop").getValue(String.class);
+//                        String string = dataSnapshot.getValue(String.class);
+                        String[] bus_stop = x.split(",");
+                        int bus_stop_size = bus_stop.length;
+//                        String start_stop_busstop[] = new String[2];
+//                        start_stop_busstop[0] = bus_stop[0];
+//                        start_stop_busstop[1] = bus_stop[bus_stop_size - 1];
+                        start_busstop_id = bus_stop[0];
+                        stop_busstop_id = bus_stop[bus_stop_size - 1];
+
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference myRef = database.getReference("users/"+uid);
+                        myRef.child("name").setValue(name);
+                        myRef.child("bus_id").setValue(finalBusid);
+                        myRef.child("status").setValue("off");
+                        myRef.child("start_busstop").setValue(start_busstop_id);
+                        myRef.child("stop_busstop").setValue(stop_busstop_id);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG, "Read failed");
+                    }
+                });
+        Log.d(TAG, "insertData: "+start_busstop_id);
+        Log.d(TAG, "insertData: "+stop_busstop_id);
+
+
+
+
     }
 
     @Override

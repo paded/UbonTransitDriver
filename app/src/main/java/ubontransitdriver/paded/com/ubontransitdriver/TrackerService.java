@@ -28,6 +28,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 public class TrackerService extends Service {
     private static final String TAG = "GPS2";
     private boolean isRunning  = false;
@@ -144,7 +150,13 @@ public class TrackerService extends Service {
                         Log.d(TAG, "location update " + location);
                         ref.child("latitude").setValue(location.getLatitude());
                         ref.child("longitude").setValue(location.getLongitude());
-                        ref.child("time").setValue(location.getTime());
+
+                        Calendar c = Calendar.getInstance();
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String formattedDate = df.format(c.getTime());
+                        Log.d("dddd", "onLocationResult: "+formattedDate);
+
+                        ref.child("time").setValue(formattedDate);
                     }
 
                 }
