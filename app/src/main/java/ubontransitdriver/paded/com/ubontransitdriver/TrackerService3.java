@@ -102,7 +102,6 @@ public class TrackerService3 extends Service implements
                 Calendar c = Calendar.getInstance();
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String formattedDate = df.format(c.getTime());
-                Log.d("dddd", "onLocationResult: "+formattedDate);
 
                 ref.child("time").setValue(formattedDate);
 
